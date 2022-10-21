@@ -697,6 +697,11 @@ func (s Scanner) detectOS(c config.ServerInfo) osTypeInterface {
 		return osType
 	}
 
+        if itsMe, osType := detectArchLinux(c); itsMe {
+                logging.Log.Debugf("ArchLinux. Host: %s:%s", c.Host, c.Port)
+                return osType 
+        }
+
 	osType := &unknown{base{ServerInfo: c}}
 	osType.setErrs([]error{xerrors.New("Unknown OS Type")})
 	return osType

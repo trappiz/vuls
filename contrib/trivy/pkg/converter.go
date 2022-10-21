@@ -184,6 +184,7 @@ func isTrivySupportedOS(family string) bool {
 		os.CentOS:             {},
 		os.Rocky:              {},
 		os.Alma:               {},
+		os.ArchLinux:          {},
 		os.Fedora:             {},
 		os.Amazon:             {},
 		os.Oracle:             {},

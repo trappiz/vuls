@@ -17,6 +17,7 @@ import (
 	apkver "github.com/knqyf263/go-apk-version"
 	debver "github.com/knqyf263/go-deb-version"
 	rpmver "github.com/knqyf263/go-rpm-version"
+        //pacmanver "github.com/trappiz/go-pacman-version"
 	"github.com/parnurzeal/gorequest"
 	"golang.org/x/xerrors"
 
@@ -137,7 +138,7 @@ func getDefsByPackNameViaHTTP(r *models.ScanResult, url string) (relatedDefs ova
 				versionRelease:    pack.FormatVer(),
 				newVersionRelease: pack.FormatNewVer(),
 				isSrcPack:         false,
-				arch:              pack.Arch,
+				arch:              pack.ArchLinux,
 				repository:        pack.Repository,
 			}
 			if ovalFamily == constant.Amazon && ovalRelease == "2" && req.repository == "" {
@@ -151,7 +152,7 @@ func getDefsByPackNameViaHTTP(r *models.ScanResult, url string) (relatedDefs ova
 				binaryPackNames: pack.BinaryNames,
 				versionRelease:  pack.Version,
 				isSrcPack:       true,
-				// arch:            pack.Arch,
+				// arch:            pack.ArchLinux,
 			}
 		}
 	}()
@@ -290,7 +291,7 @@ func getDefsByPackNameFromOvalDB(r *models.ScanResult, driver ovaldb.DB) (relate
 			packName:          pack.Name,
 			versionRelease:    pack.FormatVer(),
 			newVersionRelease: pack.FormatNewVer(),
-			arch:              pack.Arch,
+			arch:              pack.ArchLinux,
 			repository:        pack.Repository,
 			isSrcPack:         false,
 		}
@@ -304,7 +305,7 @@ func getDefsByPackNameFromOvalDB(r *models.ScanResult, driver ovaldb.DB) (relate
 			packName:        pack.Name,
 			binaryPackNames: pack.BinaryNames,
 			versionRelease:  pack.Version,
-			arch:            pack.Arch,
+			arch:            pack.ArchLinux,
 			isSrcPack:       true,
 		})
 	}
@@ -503,6 +504,20 @@ func lessThan(family, newVer string, packInOVAL ovalmodels.Package) (bool, error
 		}
 		return vera.LessThan(verb), nil
 
+        case constant.ArchLinux:
+                // FIX_ME
+                constant.OpenSUSE,
+                constant.ArchLinux,
+                constant.OpenSUSELeap,
+                constant.SUSEEnterpriseServer,
+                constant.SUSEEnterpriseDesktop,
+                constant.Amazon,
+                constant.Fedora:
+                vera := rpmver.NewVersion(newVer)
+                verb := rpmver.NewVersion(packInOVAL.Version)
+                return vera.LessThan(verb), nil
+
+
 	case constant.Oracle,
 		constant.OpenSUSE,
 		constant.OpenSUSELeap,
@@ -555,6 +570,8 @@ func NewOVALClient(family string, cnf config.GovalDictConf, o logging.LogOpts) (
 		return NewCentOS(driver, cnf.GetURL()), nil
 	case constant.Alma:
 		return NewAlma(driver, cnf.GetURL()), nil
+        case constant.ArchLinux:
+                return NewArchLinux(driver, cnf.GetURL()), nil
 	case constant.Rocky:
 		return NewRocky(driver, cnf.GetURL()), nil
 	case constant.Oracle:
@@ -609,6 +626,8 @@ func GetFamilyInOval(familyInScanResult string) (string, error) {
 		return constant.SUSEEnterpriseDesktop, nil
 	case constant.Alpine:
 		return constant.Alpine, nil
+        case constant.ArchLinux:
+                return constant.ArchLinux, nil
 	case constant.Amazon:
 		return constant.Amazon, nil
 	case constant.FreeBSD, constant.Windows:

@@ -5,7 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/future-architect/vuls/constant"
+//	"github.com/future-architect/vuls/constant"
+	"vuls/constant"
 )
 
 // EOL has End-of-Life information
@@ -84,6 +85,9 @@ func GetEOL(family, release string) (eol EOL, found bool) {
 			"8": {StandardSupportUntil: time.Date(2029, 12, 31, 23, 59, 59, 0, time.UTC)},
 			"9": {StandardSupportUntil: time.Date(2032, 5, 31, 23, 59, 59, 0, time.UTC)},
 		}[major(release)]
+        case constant.ArchLinux:
+                // Not found
+                eol, found = map[string]EOL{}[major(release)]
 	case constant.Rocky:
 		eol, found = map[string]EOL{
 			"8": {StandardSupportUntil: time.Date(2029, 5, 31, 23, 59, 59, 0, time.UTC)},

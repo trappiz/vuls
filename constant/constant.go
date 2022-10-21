@@ -20,6 +20,9 @@ const (
 	// Alma is
 	Alma = "alma"
 
+        // Arch Linux is
+        Arch = "archlinux"
+
 	// Rocky is
 	Rocky = "rocky"
 

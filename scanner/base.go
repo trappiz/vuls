@@ -698,6 +698,7 @@ func AnalyzeLibraries(ctx context.Context, libFilemap map[string]LibFile, isOffl
 		analyzer.TypeCentOS,
 		analyzer.TypeRocky,
 		analyzer.TypeAlma,
+		analyzer.TypeArchLinux,
 		analyzer.TypeFedora,
 		analyzer.TypeOracle,
 		analyzer.TypeRedHatBase,
